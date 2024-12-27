@@ -4,3 +4,6 @@ __pycache__/
 build/
 new_env/
 .env
+screenshot.jpg
+webcam.jpg
+CONST.py

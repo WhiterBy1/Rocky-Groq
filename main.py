@@ -12,6 +12,7 @@ import time
 import speech_recognition as sr 
 import re
 from Prompts import Initial_prompt, function_call_prompt
+from CONST import GROQ_API_KEY, GENAI_API_KEY
 print("\nLibrerias cargadas")
 
 # Configuración inicial
