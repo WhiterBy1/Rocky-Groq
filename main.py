@@ -1,64 +1,22 @@
 print("Cargando librerias...")
-from groq import Groq
 import time
-from PIL import ImageGrab, Image
+from PIL import Image
 import cv2
-import pyperclip
-import google.generativeai as genai
 import pyaudio
-from faster_whisper import WhisperModel
 import os
 import time
 import speech_recognition as sr 
 import re
 from Prompts import Initial_prompt, function_call_prompt
-from CONST import GROQ_API_KEY, GENAI_API_KEY
+
 print("\nLibrerias cargadas")
 
-# Configuración inicial
-print("\nCargando api keys...")
-key_word = 'luis'
-grop_client = Groq(api_key=GROQ_API_KEY)
-genai.configure(api_key=GENAI_API_KEY)
-print("Api keys cargadas correctamente")
 
 
-sys_msg =   Initial_prompt()
 
-print("Inizializando modelo de whisper...")
-model_size = "medium"
-Whisper_model = WhisperModel(model_size, device="cuda", compute_type="float16")
-print("Modelo de whisper cargado correctamente...")
 
-convo = [{'role': 'system', 'content': sys_msg}]
-generation_config = {
-    'temperature': 0.7,
-    'top_p': 1,
-    'top_k': 1,
-    'max_output_tokens': 2048
-}
-safety_settings = [
-    {
-        'category': 'HARM_CATEGORY_HARASSMENT',
-        'threshold': 'BLOCK_NONE'
-    },
-    {
-        'category': 'HARM_CATEGORY_HATE_SPEECH',
-        'threshold': 'BLOCK_NONE'
-    },
-    {
-        'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        'threshold': 'BLOCK_NONE'
-    },
-    {
-        'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-        'threshold': 'BLOCK_NONE'
-    },
-]
 
-model = genai.GenerativeModel('gemini-1.5-flash-latest',
-                            generation_config= generation_config,
-                            safety_settings= safety_settings)
+
 
 r = sr.Recognizer()
 source = sr.Microphone()
@@ -70,6 +28,7 @@ def groq_prompt(prompt, imgContext):
     response = chat_completion.choices[0].message
     convo.append(response)
     return response.content
+
 def function_call(prompt): 
     sys_msg = function_call_prompt()
     funcion_convo= [{'role':'system', 'content': sys_msg},
@@ -79,39 +38,6 @@ def function_call(prompt):
     response = chat_completion.choices[0].message
     
     return response.content
-def take_screenshot():
-    path = 'screenshot.jpg'
-    screenshot = ImageGrab.grab()
-    rgb_screenshot = screenshot.convert('RGB')
-    rgb_screenshot.save(path, quality=15)
-
-
-def web_cam_capture():
-    cam = cv2.VideoCapture(0)
-    
-    if not cam.isOpened():
-        print("Cannot open webcam")
-        return None
-    
-    path = "webcam.jpg"
-    ret, frame = cam.read()
-    
-    if not ret:
-        print("Failed to capture image from webcam")
-        cam.release()
-        return None
-    
-    cv2.imwrite(path, frame)
-    cam.release()
-    return path
-
-def get_clipboard():
-    clipboard_content = pyperclip.paste()
-    if isinstance(clipboard_content, str):
-        return clipboard_content
-    else:
-        print("No hay clipboard copiado")
-        return None
 
 def vision_prompt(prompt, photo_path):
     img = Image.open(photo_path)
