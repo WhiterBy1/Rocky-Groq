@@ -119,3 +119,16 @@ def extract_prompt(transcripted_txt, key_word):
 
 if __name__ == '__main__':
     start_listening()
+
+
+
+
+
+
+
+
+""""
+HAPPY NEW YEAR TO Y'ALL
+
+
+"""
