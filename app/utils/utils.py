@@ -1,13 +1,12 @@
 import cv2
 import pyperclip
-
+from PIL import ImageGrab
 
 def take_screenshot():
     path = 'screenshot.jpg'
     screenshot = ImageGrab.grab()
     rgb_screenshot = screenshot.convert('RGB')
     rgb_screenshot.save(path, quality=15)
-
 
 def web_cam_capture():
     cam = cv2.VideoCapture(0)
